@@ -1,18 +1,50 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'io.qameta.allure' version '2.11.2'
 }
 
 group = 'com.example'
 version = '1.0-SNAPSHOT'
 
+// Явно указываем Java 21
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
-test {
-    useJUnitPlatform()
+dependencies {
+    // JUnit 5 для тестов
+    testImplementation platform('org.junit:junit-bom:5.10.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    
+    // Allure адаптер для JUnit 5
+    testImplementation 'io.qameta.allure:allure-junit5:2.25.0'
+    
+    // Опционально: AssertJ для красивых ассертов
+    testImplementation 'org.assertj:assertj-core:3.25.1'
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+    finalizedBy 'allureReport'
+}
+
+allure {
+    version = '2.25.0'
+    autoconfigure = true
+    aspectjweaver = true
+}
+
+application {
+    mainClass = 'com.example.Main'
 }
