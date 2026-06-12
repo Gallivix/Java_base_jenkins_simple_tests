@@ -1,13 +1,12 @@
 plugins {
     id 'java'
-    id 'application'
     id 'io.qameta.allure' version '2.11.2'
 }
 
 group = 'com.example'
 version = '1.0-SNAPSHOT'
 
-// Явно указываем Java 21
+// Поддержка Java 21
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -19,15 +18,22 @@ repositories {
 }
 
 dependencies {
-    // JUnit 5 для тестов
+    // JUnit 5
     testImplementation platform('org.junit:junit-bom:5.10.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     
-    // Allure адаптер для JUnit 5
+    // Allure для JUnit 5
     testImplementation 'io.qameta.allure:allure-junit5:2.25.0'
     
     // Опционально: AssertJ для красивых ассертов
     testImplementation 'org.assertj:assertj-core:3.25.1'
+}
+
+// Задача simple_test - именно её вызывает Jenkins
+task simple_test {
+    dependsOn 'clean', 'test'
+    description = 'Run all tests and generate Allure report'
+    group = 'verification'
 }
 
 test {
@@ -43,8 +49,4 @@ allure {
     version = '2.25.0'
     autoconfigure = true
     aspectjweaver = true
-}
-
-application {
-    mainClass = 'com.example.Main'
 }
