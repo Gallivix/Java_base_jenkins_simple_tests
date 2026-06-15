@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'io.qameta.allure' version '2.12.0'
 }
 
 group = 'com.example'
@@ -15,10 +16,25 @@ repositories {
     mavenCentral()
 }
 
+allure {
+    report {
+        version.set("2.32.0")
+    }
+    adapter {
+        aspectjWeaver.set(true)
+        frameworks {
+            junit5 {
+                adapterVersion.set("2.32.0")
+            }
+        }
+    }
+}
+
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.assertj:assertj-core:3.25.1'
+    testImplementation 'io.qameta.allure:allure-junit5:2.25.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
