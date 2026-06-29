@@ -1,6 +1,8 @@
 package tests;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Story;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,9 +15,12 @@ import static io.qameta.allure.Allure.step;
 @Story("Форма регистрации")
 public class RegistrationWithPageObjectTests extends TestBase {
 
+
     @Test
     @DisplayName("Полная форма регистрации")
     void successfulRegistrationTest() {
+
+
         step("Открываем главную страницу", () ->
             registrationPage.openPage());
         step("Заполнение формы регистрации", () -> {
@@ -57,18 +62,16 @@ public class RegistrationWithPageObjectTests extends TestBase {
             registrationPage
                     .setFirstName("Alex")
                     .setLastName("Egorov")
+                    .setEmail("alex111@egorov.com")
                     .setGender("Other")
                     .setUserNumber("1234567890");
             $("#submit").click();
         });
 
         step("Check registration form results data", () -> {
-            step("Check registration form results component appears", () -> { // or move to pageobject step
-                $(".modal-dialog").should(appear);
-                $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
-            });
-
-            registrationPage.checkResult("Student Name", "Alex Egorov")
+            registrationPage
+                    .checkModalAppears()
+                    .checkResult("Student Name", "Alex Egorov")
                     .checkResult("Student Email", "alex111@egorov.com");
         });
     }
